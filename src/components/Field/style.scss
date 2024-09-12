@@ -26,6 +26,10 @@ input {
   }
 
   font-family: "Manrope", sans-serif;
+
+  &[name="email"] {
+    text-transform: none;
+  }
 }
 textarea {
   height: 336px;
