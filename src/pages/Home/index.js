@@ -13,7 +13,18 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const { last } = useData();
+  const { data } = useData();
+  const last = data?.events.reduce(
+    (latest, event) =>
+      event.date && new Date(event.date) > new Date(latest.date)
+        ? event
+        : latest,
+    data.events[0]
+  );
+  // /* eslint-disable no-console */
+  // console.log(last);
+  // /* eslint-enable no-console */
+
   return (
     <>
       <header>
@@ -114,13 +125,17 @@ const Page = () => {
       <footer className="row">
         <div className="col presta">
           <h3>Notre derniére prestation</h3>
-          <EventCard
-            imageSrc={last?.cover}
-            title={last?.title}
-            date={new Date(last?.date)}
-            small
-            label="boom"
-          />
+          {last && last.cover && last.title && last.date ? (
+            <EventCard
+              imageSrc={last.cover}
+              title={last.title}
+              date={new Date(last.date)}
+              small
+              label="boom"
+            />
+          ) : (
+            "Aucun évènement récent disponible"
+          )}
         </div>
         <div className="col contact">
           <h3>Contactez-nous</h3>
