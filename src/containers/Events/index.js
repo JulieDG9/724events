@@ -14,8 +14,14 @@ const EventList = () => {
   const [type, setType] = useState();
   const [currentPage, setCurrentPage] = useState(1);
 
+  const totalEvents = (data?.events || []).filter(
+    (event) => event.type === type || !type
+  ).length;
+
+  const pageNumber = Math.ceil(totalEvents / PER_PAGE);
+
   const filteredEvents = (data?.events || [])
-    .filter((event) => event.type === type || !type)
+    .filter((event) => event.type === type || !type) // filtrage par type
     .filter((_event, index) => {
       if (
         (currentPage - 1) * PER_PAGE <= index &&
@@ -29,7 +35,6 @@ const EventList = () => {
     setCurrentPage(1);
     setType(evtType);
   };
-  const pageNumber = Math.ceil((filteredEvents?.length || 0) / PER_PAGE) + 1;
   const typeList = new Set(data?.events.map((event) => event.type));
   return (
     <>
@@ -66,7 +71,11 @@ const EventList = () => {
                 key={n}
                 href="#events"
                 onClick={() => setCurrentPage(n + 1)}
-                className={currentPage === n + 1 ? "active" : ""}
+                // eslint-disable-next-line no-nested-ternary
+                className={
+                  // eslint-disable-next-line no-nested-ternary
+                  pageNumber === 1 ? "" : currentPage === n + 1 ? "active" : ""
+                }
               >
                 {n + 1}
               </a>
